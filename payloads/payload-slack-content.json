@@ -1,6 +1,6 @@
 {
   "trigger_user": "{{ env.TRIGGER_USER }}",
-  "commit_url": "{{ env.COMMIT_URL }}",
+  "commit_message": "{{ env.COMMIT_MESSAGE }}",
   "environment": "{{ env.ENVIRONMENT }}",
   "source_branch": "{{ env.SOURCE_BRANCH }}",
   "build_result": "{{ env.BUILD_RESULT }}",
