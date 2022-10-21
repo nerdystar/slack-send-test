@@ -87,11 +87,11 @@ jobs:
           fi
           echo "DEPLOY_RESULT=${DEPLOY_RESULT}" >> $GITHUB_ENV
 
-          echo "TRIGGER_USER=${{ github.actor }}" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
-          echo "ENVIRONMENT=${{ inputs.environment }}" >> $GITHUB_ENV
-          echo "SOURCE_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
-          echo "WORKFLOW_RUN_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_ENV
+          #echo "TRIGGER_USER=${{ github.actor }}" >> $GITHUB_ENV
+          #echo "COMMIT_MESSAGE=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
+          #echo "ENVIRONMENT=${{ inputs.environment }}" >> $GITHUB_ENV
+          #echo "SOURCE_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+          #echo "WORKFLOW_RUN_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_ENV
 
       - name: Check out branch for workflow call
         id: checkout-for-workflow-call
@@ -104,34 +104,12 @@ jobs:
         if: ${{ steps.checkout-for-workflow-call.outcome == 'skipped' }}
         uses: actions/checkout@v2
 
-      - name: slack-send1
-        uses: slackapi/slack-github-action@v1.23.0
-        with:
-          payload-file-path: "./payloads/payload-slack-content.json"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: slack-send2
+      - name: slack-send
         uses: slackapi/slack-github-action@v1.23.0
         with:
           payload: |
             {
-              "trigger_user": "${{ env.TRIGGER_USER }}",
-              "commit_message": "${{ env.COMMIT_URL }}",
-              "environment": "${{ env.ENVIRONMENT }}",
-              "source_branch": "${{ env.SOURCE_BRANCH }}",
-              "build_result": "${{ env.BUILD_RESULT }}",
-              "deploy_result": "${{ env.DEPLOY_RESULT }}",
-              "workflow_run_url": "${{ env.WORKFLOW_RUN_URL }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: slack-send3
-        uses: slackapi/slack-github-action@v1.23.0
-        with:
-          payload: |
-            {
+              "repository_name": "${{ github.event.repository.name }}"
               "trigger_user": "${{ github.actor }}",
               "commit_message": "${{ github.event.head_commit.message }}",
               "environment": "${{ inputs.environment }}",
