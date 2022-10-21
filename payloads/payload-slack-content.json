@@ -1,0 +1,9 @@
+{
+  "trigger_user": "${{ github.actor }}",
+  "commit_url": "${{ github.event.head_commit.url }}",
+  "environment": "${{ inputs.environment }}",
+  "source_branch": "${{ github.ref_name }}",
+  "build_result": "${{ env.BUILD_RESULT }}",
+  "deploy_result": "${{ env.DEPLOY_RESULT }}",
+  "workflow_run_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+}
