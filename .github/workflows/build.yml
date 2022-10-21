@@ -85,8 +85,13 @@ jobs:
             DEPLOY_RESULT="✅ 성공"
           fi
 
+          echo "TRIGGER_USER=${{ github.actor }}" >> $GITHUB_ENV
+          echo "COMMIT_URL=${{ github.event.head_commit.url }}" >> $GITHUB_ENV
+          echo "ENVIRONMENT=${{ inputs.environment }}" >> $GITHUB_ENV
+          echo "SOURCE_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
           echo "BUILD_RESULT=${{ needs.build.result }}" >> $GITHUB_ENV
-          echo "DEPLOY_RESULT=${{ needs.build.result }}" >> $GITHUB_ENV
+          echo "DEPLOY_RESULT=${{ needs.call-deploy.result }}" >> $GITHUB_ENV
+          echo "WORKFLOW_RUN_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_ENV
 
       - name: Check out branch for workflow call
         id: checkout-for-workflow-call
