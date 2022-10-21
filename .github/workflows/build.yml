@@ -72,6 +72,7 @@ jobs:
           else
             BUILD_RESULT="✅ 성공"
           fi
+          echo "BUILD_RESULT=${BUILD_RESULT}" >> $GITHUB_ENV
 
           if [ "${{ needs.call-deploy.result }}" = "failure" ] || \
              [ "${{ needs.call-deploy.result }}" = "failure" ];
@@ -84,6 +85,7 @@ jobs:
           else
             DEPLOY_RESULT="✅ 성공"
           fi
+          echo "DEPLOY_RESULT=${DEPLOY_RESULT}" >> $GITHUB_ENV
 
           echo "TRIGGER_USER=${{ github.actor }}" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
