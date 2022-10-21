@@ -1,0 +1,107 @@
+name: 1.Build
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Select the environment
+        required: true
+      service:
+        description: Which service to be built. api or admin or etc...
+        required: true
+        type: choice
+        options:
+          - api
+          - game
+          - admin
+  workflow_call:
+    inputs:
+      branch:
+        description: Source branch name
+        required: true
+        type: string
+      environment:
+        description: Target environment
+        required: true
+        type: string
+      service:
+        description: Service to be built. api or admin or etc...
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Build Image
+    runs-on: ubuntu-20.04
+    env:
+      PROJECT: dsp
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - name: Check out branch for workflow call
+        run: |
+          echo "build"
+
+  call-deploy:
+    needs: [ build ]
+    name: Call deploy workflow
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+
+  slack-notification:
+    if: ${{ always() }}
+    needs: [ build, call-deploy ]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Set Env
+        run: |
+          if [ "${{ needs.build.result }}" = "failure" ] || \
+             [ "${{ needs.build.result }}" = "failure" ];
+          then
+            BUILD_RESULT="❌ 실패"
+          elif [ "${{ needs.build.result }}" = "cancelled" ] || \
+            [ "${{ needs.build.result }}" = "cancelled" ];
+          then
+            BUILD_RESULT="⚠️ 취소"
+          else
+            BUILD_RESULT="✅ 성공"
+          fi
+
+          if [ "${{ needs.call-deploy.result }}" = "failure" ] || \
+             [ "${{ needs.call-deploy.result }}" = "failure" ];
+          then
+            DEPLOY_RESULT="❌ 실패"
+          elif [ "${{ needs.call-deploy.result }}" = "cancelled" ] || \
+            [ "${{ needs.call-deploy.result }}" = "cancelled" ];
+          then
+            DEPLOY_RESULT="⚠️ 취소"
+          else
+            DEPLOY_RESULT="✅ 성공"
+          fi
+
+          echo "BUILD_RESULT=${{ needs.build.result }}" >> $GITHUB_ENV
+          echo "DEPLOY_RESULT=${{ needs.build.result }}" >> $GITHUB_ENV
+
+      - name: Check out branch for workflow call
+        id: checkout-for-workflow-call
+        if: ${{ inputs.branch }}
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ inputs.branch }}
+
+      - name: Check out branch for workflow dispatch
+        if: ${{ steps.checkout-for-workflow-call.outcome == 'skipped' }}
+        uses: actions/checkout@v2
+
+      - name: slack-send
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload-file-path: "./payloads/payload-slack-content.json"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
