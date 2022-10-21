@@ -116,13 +116,13 @@ jobs:
         with:
           payload: |
             {
-              "trigger_user": "{{ env.TRIGGER_USER }}",
-              "commit_url": "{{ env.COMMIT_URL }}",
-              "environment": "{{ env.ENVIRONMENT }}",
-              "source_branch": "{{ env.SOURCE_BRANCH }}",
-              "build_result": "{{ env.BUILD_RESULT }}",
-              "deploy_result": "{{ env.DEPLOY_RESULT }}",
-              "workflow_run_url": "{{ env.WORKFLOW_RUN_URL }}"
+              "trigger_user": "${{ env.TRIGGER_USER }}",
+              "commit_url": "${{ env.COMMIT_URL }}",
+              "environment": "${{ env.ENVIRONMENT }}",
+              "source_branch": "${{ env.SOURCE_BRANCH }}",
+              "build_result": "${{ env.BUILD_RESULT }}",
+              "deploy_result": "${{ env.DEPLOY_RESULT }}",
+              "workflow_run_url": "${{ env.WORKFLOW_RUN_URL }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
