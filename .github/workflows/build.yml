@@ -91,10 +91,6 @@ jobs:
           echo "COMMIT_MESSAGE=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
           echo "ENVIRONMENT=${{ inputs.environment }}" >> $GITHUB_ENV
           echo "SOURCE_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
-          echo "BUILD_RESULT=${{ env.BUILD_RESULT }}" >> $GITHUB_ENV
-          echo "DEPLOY_RESULT=${{ env.DEPLOY_RESULT }}" >> $GITHUB_ENV
-          echo "BUILD_RESULT2=${{ BUILD_RESULT }}" >> $GITHUB_ENV
-          echo "DEPLOY_RESULT2=${{ DEPLOY_RESULT }}" >> $GITHUB_ENV
           echo "WORKFLOW_RUN_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_ENV
 
       - name: Check out branch for workflow call
