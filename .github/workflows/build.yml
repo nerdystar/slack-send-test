@@ -103,7 +103,7 @@ jobs:
         with:
           payload: |
             {
-              "repository_name": "${{ github.event.repository.name }}",
+              "repository_name": "${{ github.event.repository.name }} ( ${{ github.server_url }}/${{ github.repository }} )",
               "trigger_user": "${{ github.actor }}",
               "commit_message": "${{ github.event.head_commit.message }}",
               "environment": "${{ inputs.environment }}",
